@@ -28,8 +28,7 @@ cd $builddir/php-driver/ext
 phpize
 
 echo "Compiling extension ..."
-cp -a $builddir/cpp-driver/libcassandra_static.a $builddir/out/lib
-cp -a $builddir/cpp-driver/libcassandra.so* $builddir/out/lib
+cp -a $builddir/cpp-driver/libcassandra_static.a $builddir/out/lib/libcassandra.a
 cp $builddir/php-driver/lib/cpp-driver/include/cassandra.h $builddir/out/include 
 cd $builddir/php-driver/ext
 LIBS="-lssl -lz -luv -lm -lstdc++" LDFLAGS="-L$builddir/out/lib" \
