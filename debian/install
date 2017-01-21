@@ -1,0 +1,2 @@
+build/cassandra.ini /etc/php/7.0/mods-available
+build/php-driver/ext/modules/cassandra.so /usr/lib/php/20151012

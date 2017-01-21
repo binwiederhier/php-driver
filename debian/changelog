@@ -1,0 +1,5 @@
+php-cassandra (1.2.2) unstable; urgency=medium
+
+  * Initial Release.
+
+ -- Philipp Heckel <philipp.heckel@gmail.com>  Fri, 20 Jan 2017 17:55:12 -0500

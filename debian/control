@@ -1,0 +1,10 @@
+Source: php-cassandra
+Priority: optional
+Maintainer: Philipp Heckel <philipp.heckel@gmail.com>
+Build-Depends: debhelper (>=9), php-pear, cmake, libuv0.10, libuv0.10-dev, libgmp-dev
+Standards-Version: 3.9.6
+
+Package: php-cassandra
+Architecture: any
+Depends: php7.0, libuv0.10
+Description: DataStax PHP Driver for Apache Cassandra

@@ -6,9 +6,15 @@
 /docs/
 /vendor/
 /venv/
-
+/debian/php-cassandra/
+/debian/.debhelper/
 
 # Files to ignore
 /cassandra.log
 /composer.phar
 /tmp/*
+/debian/files
+/debian/debhelper-build-stamp
+/debian/php-cassandra.debhelper.log
+/debian/php-cassandra.substvars
+
