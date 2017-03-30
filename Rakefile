@@ -48,8 +48,8 @@ class Release
   def sources
     (
       Dir.glob(@dirname + '/ext/config.{m4,w32}') +
-      Dir.glob(@dirname + '/ext/php_cassandra.{c,h}') +
-      Dir.glob(@dirname + '/ext/{php_cassandra_types.h,version.h}') +
+      Dir.glob(@dirname + '/ext/php_driver.{c,h}') +
+      Dir.glob(@dirname + '/ext/{php_driver_types.h,php_driver_globals.h,version.h}') +
       Dir.glob(@dirname + '/ext/src/**/*.{c,h}') +
       Dir.glob(@dirname + '/ext/util/**/*.{c,h}')
     ).map {|p| p.gsub(@dirname + '/ext/', '') }.sort
@@ -59,7 +59,9 @@ class Release
     (
       Dir.glob(@dirname + '/ext/doc/**/*.*') <<
       File.join(@dirname, 'ext/LICENSE')
-    ).map {|p| p.gsub(@dirname + '/ext/', '') }.sort
+    )
+    .reject {|p| p[%r{.*ext/doc/generate_doc.*}] }
+    .map {|p| p.gsub(@dirname + '/ext/', '') }.sort
   end
 
   def tests
@@ -149,7 +151,7 @@ end
   <dependencies>
   <required>
    <php>
-    <min>5.5.0</min>
+    <min>5.6.0</min>
     <max>7.0.99</max>
    </php>
    <pearinstaller>
@@ -165,19 +167,19 @@ end
 
   def version_h
     ERB.new(<<-ERB)
-#ifndef PHP_CASSANDRA_VERSION_H
-#define PHP_CASSANDRA_VERSION_H
+#ifndef PHP_DRIVER_VERSION_H
+#define PHP_DRIVER_VERSION_H
 
 /* Define Extension and Version Properties */
-#define PHP_CASSANDRA_NAME         "cassandra"
-#define PHP_CASSANDRA_MAJOR        <%= major %>
-#define PHP_CASSANDRA_MINOR        <%= minor %>
-#define PHP_CASSANDRA_RELEASE      <%= release %>
-#define PHP_CASSANDRA_STABILITY    "<%= stability %>"
-#define PHP_CASSANDRA_VERSION      "<%= pecl_version %>"
-#define PHP_CASSANDRA_VERSION_FULL "<%= version %>"
+#define PHP_DRIVER_NAME         "cassandra"
+#define PHP_DRIVER_MAJOR        <%= major %>
+#define PHP_DRIVER_MINOR        <%= minor %>
+#define PHP_DRIVER_RELEASE      <%= release %>
+#define PHP_DRIVER_STABILITY    "<%= stability %>"
+#define PHP_DRIVER_VERSION      "<%= pecl_version %>"
+#define PHP_DRIVER_VERSION_FULL "<%= version %>"
 
-#endif /* PHP_CASSANDRA_VERSION_H */
+#endif /* PHP_DRIVER_VERSION_H */
     ERB
   end
 

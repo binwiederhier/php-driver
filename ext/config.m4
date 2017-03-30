@@ -4,8 +4,8 @@ PHP_ARG_WITH(cassandra, Enable Cassandra extension,
 AC_MSG_CHECKING([for supported PHP version])
 PHP_CASSANDRA_FOUND_PHP_VERSION=`${PHP_CONFIG} --version`
 PHP_CASSANDRA_FOUND_PHP_VERSION_NUMBER=`echo "${PHP_CASSANDRA_FOUND_PHP_VERSION}" | $AWK 'BEGIN { FS = "."; } { printf "%d", ([$]1 * 100 + [$]2) * 100 + [$]3;}'`
-if test "$PHP_CASSANDRA_FOUND_PHP_VERSION_NUMBER" -lt "50500"; then
-  AC_MSG_ERROR([not supported. PHP version 5.5.0+ required (found $PHP_CASSANDRA_FOUND_PHP_VERSION)])
+if test "$PHP_CASSANDRA_FOUND_PHP_VERSION_NUMBER" -lt "50600"; then
+  AC_MSG_ERROR([not supported. PHP version 5.6.0+ required (found $PHP_CASSANDRA_FOUND_PHP_VERSION)])
 else
   AC_MSG_RESULT([supported ($PHP_CASSANDRA_FOUND_PHP_VERSION)])
 fi
@@ -22,113 +22,115 @@ fi
 
 if test "$PHP_CASSANDRA" != "no"; then
   CASSANDRA_CLASSES="\
-    src/Cassandra.c \
-    src/Cassandra/Aggregate.c \
-    src/Cassandra/BatchStatement.c \
-    src/Cassandra/Bigint.c \
-    src/Cassandra/Blob.c \
-    src/Cassandra/Cluster.c \
-    src/Cassandra/Cluster/Builder.c \
-    src/Cassandra/Collection.c \
-    src/Cassandra/Column.c \
-    src/Cassandra/Date.c \
-    src/Cassandra/Decimal.c \
-    src/Cassandra/DefaultAggregate.c \
-    src/Cassandra/DefaultCluster.c \
-    src/Cassandra/DefaultColumn.c \
-    src/Cassandra/DefaultFunction.c \
-    src/Cassandra/DefaultIndex.c \
-    src/Cassandra/DefaultKeyspace.c \
-    src/Cassandra/DefaultMaterializedView.c \
-    src/Cassandra/DefaultSchema.c \
-    src/Cassandra/DefaultSession.c \
-    src/Cassandra/DefaultTable.c \
-    src/Cassandra/Exception.c \
-    src/Cassandra/ExecutionOptions.c \
-    src/Cassandra/Float.c \
-    src/Cassandra/Function.c \
-    src/Cassandra/Future.c \
-    src/Cassandra/FutureClose.c \
-    src/Cassandra/FuturePreparedStatement.c \
-    src/Cassandra/FutureRows.c \
-    src/Cassandra/FutureSession.c \
-    src/Cassandra/FutureValue.c \
-    src/Cassandra/Index.c \
-    src/Cassandra/Inet.c \
-    src/Cassandra/Keyspace.c \
-    src/Cassandra/Map.c \
-    src/Cassandra/MaterializedView.c \
-    src/Cassandra/Numeric.c \
-    src/Cassandra/PreparedStatement.c \
-    src/Cassandra/RetryPolicy.c \
-    src/Cassandra/Rows.c \
-    src/Cassandra/Schema.c \
-    src/Cassandra/Session.c \
-    src/Cassandra/Set.c \
-    src/Cassandra/SimpleStatement.c \
-    src/Cassandra/Smallint.c \
-    src/Cassandra/SSLOptions.c \
-    src/Cassandra/SSLOptions/Builder.c \
-    src/Cassandra/Statement.c \
-    src/Cassandra/Table.c \
-    src/Cassandra/Time.c \
-    src/Cassandra/Timestamp.c \
-    src/Cassandra/TimestampGenerator.c \
-    src/Cassandra/TimestampGenerator/Monotonic.c \
-    src/Cassandra/TimestampGenerator/ServerSide.c \
-    src/Cassandra/Timeuuid.c \
-    src/Cassandra/Tinyint.c \
-    src/Cassandra/Tuple.c \
-    src/Cassandra/Type.c \
-    src/Cassandra/UserTypeValue.c \
-    src/Cassandra/Uuid.c \
-    src/Cassandra/UuidInterface.c \
-    src/Cassandra/Value.c \
-    src/Cassandra/Varint.c \
+    src/Core.c \
+    src/Aggregate.c \
+    src/BatchStatement.c \
+    src/Bigint.c \
+    src/Blob.c \
+    src/Cluster.c \
+    src/Cluster/Builder.c \
+    src/Collection.c \
+    src/Column.c \
+    src/Custom.c \
+    src/Date.c \
+    src/Decimal.c \
+    src/DefaultAggregate.c \
+    src/DefaultCluster.c \
+    src/DefaultColumn.c \
+    src/DefaultFunction.c \
+    src/DefaultIndex.c \
+    src/DefaultKeyspace.c \
+    src/DefaultMaterializedView.c \
+    src/DefaultSchema.c \
+    src/DefaultSession.c \
+    src/DefaultTable.c \
+    src/Duration.c \
+    src/Exception.c \
+    src/ExecutionOptions.c \
+    src/Float.c \
+    src/Function.c \
+    src/Future.c \
+    src/FutureClose.c \
+    src/FuturePreparedStatement.c \
+    src/FutureRows.c \
+    src/FutureSession.c \
+    src/FutureValue.c \
+    src/Index.c \
+    src/Inet.c \
+    src/Keyspace.c \
+    src/Map.c \
+    src/MaterializedView.c \
+    src/Numeric.c \
+    src/PreparedStatement.c \
+    src/RetryPolicy.c \
+    src/Rows.c \
+    src/Schema.c \
+    src/Session.c \
+    src/Set.c \
+    src/SimpleStatement.c \
+    src/Smallint.c \
+    src/SSLOptions.c \
+    src/SSLOptions/Builder.c \
+    src/Statement.c \
+    src/Table.c \
+    src/Time.c \
+    src/Timestamp.c \
+    src/TimestampGenerator.c \
+    src/TimestampGenerator/Monotonic.c \
+    src/TimestampGenerator/ServerSide.c \
+    src/Timeuuid.c \
+    src/Tinyint.c \
+    src/Tuple.c \
+    src/Type.c \
+    src/UserTypeValue.c \
+    src/Uuid.c \
+    src/UuidInterface.c \
+    src/Value.c \
+    src/Varint.c \
   ";
 
   CASSANDRA_EXCEPTIONS="\
-    src/Cassandra/Exception/AlreadyExistsException.c \
-    src/Cassandra/Exception/AuthenticationException.c \
-    src/Cassandra/Exception/ConfigurationException.c \
-    src/Cassandra/Exception/DivideByZeroException.c \
-    src/Cassandra/Exception/DomainException.c \
-    src/Cassandra/Exception/ExecutionException.c \
-    src/Cassandra/Exception/InvalidArgumentException.c \
-    src/Cassandra/Exception/InvalidQueryException.c \
-    src/Cassandra/Exception/InvalidSyntaxException.c \
-    src/Cassandra/Exception/IsBootstrappingException.c \
-    src/Cassandra/Exception/LogicException.c \
-    src/Cassandra/Exception/OverloadedException.c \
-    src/Cassandra/Exception/ProtocolException.c \
-    src/Cassandra/Exception/RangeException.c \
-    src/Cassandra/Exception/ReadTimeout.c \
-    src/Cassandra/Exception/RuntimeException.c \
-    src/Cassandra/Exception/ServerException.c \
-    src/Cassandra/Exception/TimeoutException.c \
-    src/Cassandra/Exception/TruncateException.c \
-    src/Cassandra/Exception/UnauthorizedException.c \
-    src/Cassandra/Exception/UnavailableException.c \
-    src/Cassandra/Exception/UnpreparedException.c \
-    src/Cassandra/Exception/ValidationException.c \
-    src/Cassandra/Exception/WriteTimeoutException.c
+    src/Exception/AlreadyExistsException.c \
+    src/Exception/AuthenticationException.c \
+    src/Exception/ConfigurationException.c \
+    src/Exception/DivideByZeroException.c \
+    src/Exception/DomainException.c \
+    src/Exception/ExecutionException.c \
+    src/Exception/InvalidArgumentException.c \
+    src/Exception/InvalidQueryException.c \
+    src/Exception/InvalidSyntaxException.c \
+    src/Exception/IsBootstrappingException.c \
+    src/Exception/LogicException.c \
+    src/Exception/OverloadedException.c \
+    src/Exception/ProtocolException.c \
+    src/Exception/RangeException.c \
+    src/Exception/ReadTimeoutException.c \
+    src/Exception/RuntimeException.c \
+    src/Exception/ServerException.c \
+    src/Exception/TimeoutException.c \
+    src/Exception/TruncateException.c \
+    src/Exception/UnauthorizedException.c \
+    src/Exception/UnavailableException.c \
+    src/Exception/UnpreparedException.c \
+    src/Exception/ValidationException.c \
+    src/Exception/WriteTimeoutException.c
   ";
 
   CASSANDRA_RETRY_POLICIES="\
-    src/Cassandra/RetryPolicy/DefaultPolicy.c \
-    src/Cassandra/RetryPolicy/DowngradingConsistency.c \
-    src/Cassandra/RetryPolicy/Fallthrough.c \
-    src/Cassandra/RetryPolicy/Logging.c
+    src/RetryPolicy/DefaultPolicy.c \
+    src/RetryPolicy/DowngradingConsistency.c \
+    src/RetryPolicy/Fallthrough.c \
+    src/RetryPolicy/Logging.c
   ";
 
   CASSANDRA_TYPES="\
-    src/Cassandra/Type/Collection.c \
-    src/Cassandra/Type/Custom.c \
-    src/Cassandra/Type/Map.c \
-    src/Cassandra/Type/Scalar.c \
-    src/Cassandra/Type/Set.c \
-    src/Cassandra/Type/Tuple.c \
-    src/Cassandra/Type/UserType.c
+    src/Type/Collection.c \
+    src/Type/Custom.c \
+    src/Type/Map.c \
+    src/Type/Scalar.c \
+    src/Type/Set.c \
+    src/Type/Tuple.c \
+    src/Type/UserType.c
   ";
 
   CASSANDRA_UTIL="\
@@ -147,15 +149,15 @@ if test "$PHP_CASSANDRA" != "no"; then
 
   case $(uname -s) in
     Linux)
-      CASSANDRA_CFLAGS="-Wall -pedantic -Wextra -Wno-long-long -Wno-deprecated-declarations -Wno-unused-parameter -Wno-unused-result -Wno-variadic-macros -Wno-extra-semi -pthread"
+      CASSANDRA_CFLAGS="-Wall -Wextra -Wno-long-long -Wno-deprecated-declarations -Wno-unused-parameter -Wno-unused-result -Wno-variadic-macros -Wno-extra-semi -pthread"
       ;;
     Darwin)
-      CASSANDRA_CFLAGS="-Wall -pedantic -Wextra -Wno-long-long -Wno-deprecated-declarations -Wno-unused-parameter -Wno-unused-result -Wno-variadic-macros -Wno-extra-semi"
+      CASSANDRA_CFLAGS="-Wall -Wextra -Wno-long-long -Wno-deprecated-declarations -Wno-unused-parameter -Wno-unused-result -Wno-variadic-macros -Wno-extra-semi"
       ;;
   esac
 
   PHP_NEW_EXTENSION(cassandra,
-    php_cassandra.c \
+    php_driver.c \
     $CASSANDRA_CLASSES \
     $CASSANDRA_EXCEPTIONS \
     $CASSANDRA_RETRY_POLICIES \
@@ -163,13 +165,12 @@ if test "$PHP_CASSANDRA" != "no"; then
     $CASSANDRA_UTIL,
     $ext_shared, , $CASSANDRA_CFLAGS)
   PHP_ADD_BUILD_DIR($ext_builddir/src)
-  PHP_ADD_BUILD_DIR($ext_builddir/src/Cassandra)
-  PHP_ADD_BUILD_DIR($ext_builddir/src/Cassandra/Cluster)
-  PHP_ADD_BUILD_DIR($ext_builddir/src/Cassandra/Exception)
-  PHP_ADD_BUILD_DIR($ext_builddir/src/Cassandra/SSLOptions)
-  PHP_ADD_BUILD_DIR($ext_builddir/src/Cassandra/Type)
-  PHP_ADD_BUILD_DIR($ext_builddir/src/Cassandra/RetryPolicy)
-  PHP_ADD_BUILD_DIR($ext_builddir/src/Cassandra/TimestampGenerator)
+  PHP_ADD_BUILD_DIR($ext_builddir/src/Cluster)
+  PHP_ADD_BUILD_DIR($ext_builddir/src/Exception)
+  PHP_ADD_BUILD_DIR($ext_builddir/src/SSLOptions)
+  PHP_ADD_BUILD_DIR($ext_builddir/src/Type)
+  PHP_ADD_BUILD_DIR($ext_builddir/src/RetryPolicy)
+  PHP_ADD_BUILD_DIR($ext_builddir/src/TimestampGenerator)
   PHP_ADD_BUILD_DIR($ext_builddir/util)
   PHP_SUBST(CASSANDRA_SHARED_LIBADD)
   PHP_SUBST(CASSANDRA_CFLAGS)
@@ -269,8 +270,8 @@ if test "$PHP_CASSANDRA" != "no"; then
   AC_MSG_CHECKING([for supported DataStax C/C++ driver version])
   PHP_CASSANDRA_FOUND_CASSANDRA_VERSION=`$AWK '/CASS_VERSION_MAJOR/ {printf $3"."} /CASS_VERSION_MINOR/ {printf $3"."} /CASS_VERSION_PATCH/ {printf $3}' $CPP_DRIVER_DIR/include/cassandra.h`
   PHP_CASSANDRA_FOUND_CASSANDRA_VERSION_NUMBER=`echo "${PHP_CASSANDRA_FOUND_CASSANDRA_VERSION}" | $AWK 'BEGIN { FS = "."; } { printf "%d", ([$]1 * 100 + [$]2) * 100 + [$]3;}'`
-  if test "$PHP_CASSANDRA_FOUND_CASSANDRA_VERSION_NUMBER" -lt "20402"; then
-  AC_MSG_ERROR([not supported. Driver version 2.4.2+ required (found $PHP_CASSANDRA_FOUND_CASSANDRA_VERSION)])
+  if test "$PHP_CASSANDRA_FOUND_CASSANDRA_VERSION_NUMBER" -lt "20600"; then
+  AC_MSG_ERROR([not supported. Driver version 2.6.0+ required (found $PHP_CASSANDRA_FOUND_CASSANDRA_VERSION)])
   else
     AC_MSG_RESULT([supported ($PHP_CASSANDRA_FOUND_CASSANDRA_VERSION)])
   fi

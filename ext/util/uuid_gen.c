@@ -14,28 +14,27 @@
  * limitations under the License.
  */
 
-#include "php_cassandra.h"
+#include "php_driver.h"
+#include "php_driver_globals.h"
 #include <stdlib.h>
 #include "util/uuid_gen.h"
-
-ZEND_EXTERN_MODULE_GLOBALS(cassandra)
 
 static CassUuidGen* get_uuid_gen(TSRMLS_D) {
   /* Create a new uuid generator if our PID has changed. This prevents the same
    * UUIDs from being generated in forked processes.
    */
-  if (CASSANDRA_G(uuid_gen_pid) != getpid()) {
-    if (CASSANDRA_G(uuid_gen)) {
-      cass_uuid_gen_free(CASSANDRA_G(uuid_gen));
+  if (PHP_DRIVER_G(uuid_gen_pid) != getpid()) {
+    if (PHP_DRIVER_G(uuid_gen)) {
+      cass_uuid_gen_free(PHP_DRIVER_G(uuid_gen));
     }
-    CASSANDRA_G(uuid_gen) = cass_uuid_gen_new();
-    CASSANDRA_G(uuid_gen_pid) = getpid();
+    PHP_DRIVER_G(uuid_gen) = cass_uuid_gen_new();
+    PHP_DRIVER_G(uuid_gen_pid) = getpid();
   }
-  return CASSANDRA_G(uuid_gen);
+  return PHP_DRIVER_G(uuid_gen);
 }
 
 void
-php_cassandra_uuid_generate_random(CassUuid *out TSRMLS_DC)
+php_driver_uuid_generate_random(CassUuid *out TSRMLS_DC)
 {
   CassUuidGen* uuid_gen = get_uuid_gen(TSRMLS_C);
   if (!uuid_gen) return;
@@ -43,7 +42,7 @@ php_cassandra_uuid_generate_random(CassUuid *out TSRMLS_DC)
 }
 
 void
-php_cassandra_uuid_generate_time(CassUuid *out TSRMLS_DC)
+php_driver_uuid_generate_time(CassUuid *out TSRMLS_DC)
 {
   CassUuidGen* uuid_gen = get_uuid_gen(TSRMLS_C);
   if (!uuid_gen) return;
@@ -51,7 +50,7 @@ php_cassandra_uuid_generate_time(CassUuid *out TSRMLS_DC)
 }
 
 void
-php_cassandra_uuid_generate_from_time(long timestamp, CassUuid *out TSRMLS_DC)
+php_driver_uuid_generate_from_time(long timestamp, CassUuid *out TSRMLS_DC)
 {
   CassUuidGen* uuid_gen = get_uuid_gen(TSRMLS_C);
   if (!uuid_gen) return;
